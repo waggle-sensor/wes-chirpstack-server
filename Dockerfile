@@ -7,6 +7,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
     python3 \
     python3-psycopg2
 
+# TODO: remove, only for debug
+RUN apt-get install --no-install-recommends -y \
+    vim
+
 COPY postStart.py .
 
 # restore the running as `nobody` as is defined by `chirpstack/chirpstack:4.0.3`
