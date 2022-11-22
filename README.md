@@ -1,0 +1,10 @@
+# Waggle Edge Stack Chirpstack Application Server
+
+This is an extension of the [Chirpstack Appliction Server (v4)](https://www.chirpstack.io/docs/chirpstack/changelog.html) adding [The Things Network LoRaWAN device profile templates](https://github.com/TheThingsNetwork/lorawan-devices).
+
+This project simply clones the The Things Network LoRaWAN github repository into the Chirpstack application server Docker image, allowing for the LoRaWAN device profiles to be imported.
+
+> Note: the specific version chosen of the [The Things Network LoRaWAN device profile templates](https://github.com/TheThingsNetwork/lorawan-devices) was arbitrary and the `HEAD` of the github project at the time.
+
+References:
+- https://www.chirpstack.io/docs/chirpstack/use/device-profile-templates.html
