@@ -1,7 +1,7 @@
 FROM chirpstack/chirpstack:4.6
 
 ENV TTN_REPO=https://github.com/TheThingsNetwork/lorawan-devices
-ENV TTN_VERSION=6c3b4856ebe08de7ffb1642e0d9b5200ff0c4750
+ENV TTN_VERSION=277e69a79347ceba2593e1da08117d0e3329ecda
 
 USER root
 
