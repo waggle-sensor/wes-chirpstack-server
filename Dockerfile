@@ -1,12 +1,11 @@
-FROM chirpstack/chirpstack:4.0.4
+FROM chirpstack/chirpstack:4.6
 
 ENV TTN_REPO=https://github.com/TheThingsNetwork/lorawan-devices
-ENV TTN_VERSION=6c3b4856ebe08de7ffb1642e0d9b5200ff0c4750
+ENV TTN_VERSION=277e69a79347ceba2593e1da08117d0e3329ecda
 
 USER root
 
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    git
+RUN apk update && apk add --no-cache git
 
 RUN git clone ${TTN_REPO} -b master --single-branch /opt/lorawan-devices ; \
     cd /opt/lorawan-devices ; \
