@@ -18,7 +18,8 @@ RUN apk add --no-cache \
     libffi-dev
 
 RUN pip3 install --no-cache-dir -r /tmp/requirements.txt && \
-    rm /tmp/requirements.txt && /
+    #clean up
+    rm /tmp/requirements.txt && \
     apk del \
     g++ \
     musl-dev \
