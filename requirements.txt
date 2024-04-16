@@ -1,1 +1,0 @@
-git+https://github.com/waggle-sensor/chirpstack_api_wrapper #TODO: add the version tag once released in github
