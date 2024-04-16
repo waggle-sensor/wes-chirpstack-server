@@ -8,7 +8,7 @@ USER root
 COPY requirements.txt /tmp
 
 RUN apk update && \
-    apk add --no-cache git python3 py3-pip && \
+    apk add --no-cache git python3 py3-pip build-base && \
     ln -sf /usr/bin/python3 /usr/bin/python && \
     pip3 install --no-cache-dir -r /tmp/requirements.txt
 
