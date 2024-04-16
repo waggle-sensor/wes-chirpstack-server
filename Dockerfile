@@ -5,7 +5,9 @@ ENV TTN_VERSION=277e69a79347ceba2593e1da08117d0e3329ecda
 
 USER root
 
-RUN apk update && apk add --no-cache git
+RUN apk update && \
+    apk add --no-cache git python3 py3-pip && \
+    ln -sf /usr/bin/python3 /usr/bin/python
 
 RUN git clone ${TTN_REPO} -b master --single-branch /opt/lorawan-devices ; \
     cd /opt/lorawan-devices ; \
