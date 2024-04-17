@@ -21,7 +21,7 @@ RUN git clone https://github.com/brocaar/chirpstack-api.git ; \
     make build ; \
     make install ; \
     #clean up
-    cd ../..
+    cd ../.. ; \
     rm -rf chirpstack-api
 
 RUN git clone ${TTN_REPO} -b master --single-branch /opt/lorawan-devices ; \
