@@ -1,1 +1,2 @@
+git+https://github.com/chirpstack/chirpstack.git@8c875c3#egg=chirpstack-api&subdirectory=api/python/src #build v4.7.0 from source
 git+https://github.com/waggle-sensor/chirpstack_api_wrapper #TODO: add the version tag once released in github
