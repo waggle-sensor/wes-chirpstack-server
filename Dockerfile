@@ -14,6 +14,15 @@ RUN apk update && \
     pip3 install --no-cache-dir -r /tmp/requirements.txt && \
     #clean up
     rm /tmp/requirements.txt
+    pip3 uninstall chirpstack-api
+
+RUN git clone https://github.com/brocaar/chirpstack-api.git ; \
+    cd chirpstack-api/python/ ; \
+    make build ; \
+    make install ; \
+    #clean up
+    cd ../..
+    rm -rf chirpstack-api
 
 RUN git clone ${TTN_REPO} -b master --single-branch /opt/lorawan-devices ; \
     cd /opt/lorawan-devices ; \
