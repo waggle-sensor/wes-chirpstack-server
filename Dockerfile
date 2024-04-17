@@ -21,4 +21,4 @@ RUN git clone ${TTN_REPO} -b master --single-branch /opt/lorawan-devices ; \
     rm -rf .git
 
 # restore the running as `nobody` as is defined by chirpstack docker image
-USER nobody:nogroup
+# USER nobody:nogroup
