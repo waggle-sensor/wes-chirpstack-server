@@ -13,7 +13,7 @@ RUN apk update && \
     pip3 install --upgrade pip && \
     pip3 install --no-cache-dir -r /tmp/requirements.txt && \
     #clean up
-    rm /tmp/requirements.txt
+    rm /tmp/requirements.txt && \
     pip3 uninstall chirpstack-api
 
 RUN git clone https://github.com/brocaar/chirpstack-api.git ; \
