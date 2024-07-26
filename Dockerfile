@@ -1,14 +1,19 @@
 FROM chirpstack/chirpstack:4.6
 
-ENV DEVICE_TEMPLATE_REPO=https://github.com/waggle-sensor/wes-lorawan-device-templates
-
 USER root
 
-RUN apk update && apk add --no-cache git
+# Install cron and git
+RUN apk update && apk add --no-cache cron git bash
 
-RUN git clone ${DEVICE_TEMPLATE_REPO} -b master --single-branch /opt/lorawan-devices ; \
-    cd /opt/lorawan-devices ; \
-    rm -rf .git
+# Copy your script into the container
+COPY update-and-import.sh /usr/local/bin/update-and-import.sh
+RUN chmod +x /usr/local/bin/update-and-import.sh
+
+# Set up cron job
+RUN echo '0 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
+
+# Start cron and then ChirpStack
+CMD ["sh", "-c", "crond && chirpstack -c /etc/chirpstack-waggle"]
