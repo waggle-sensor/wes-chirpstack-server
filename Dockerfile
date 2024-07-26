@@ -20,7 +20,8 @@ COPY update-and-import.sh /usr/local/bin/update-and-import.sh
 RUN chmod +x /usr/local/bin/update-and-import.sh
 
 # Set up cron job
-RUN echo '0 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
+# RUN echo '0 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
+RUN echo '*/15 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
