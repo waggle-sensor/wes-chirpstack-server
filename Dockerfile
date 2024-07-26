@@ -11,9 +11,9 @@ USER root
 RUN apk update && apk add --no-cache git bash
 
 # clone repo
-RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR} ; \
-    cd ${TARGET_DIR} ; \
-    rm -rf .git
+# RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR} ; \
+#     cd ${TARGET_DIR} ; \
+#     rm -rf .git
 
 # Copy your script into the container
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
