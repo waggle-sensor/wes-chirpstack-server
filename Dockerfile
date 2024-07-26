@@ -1,3 +1,5 @@
+# If you migrate to chirpstack=>4.7v, a migration needs to be done
+#check this: https://www.chirpstack.io/docs/chirpstack/changelog.html#v470
 FROM chirpstack/chirpstack:4.6
 
 USER root
