@@ -22,9 +22,9 @@ COPY update-and-import.sh /usr/local/bin/update-and-import.sh
 # Set permissions to be read and executable by the owner and others
 RUN chmod 555 /usr/local/bin/update-and-import.sh
 
-# Set permissions to allow rwx for owner, and rw for group/others
+# Set permissions to allow rwx for owner/group/others
 # TODO: change /opt to ${TARGET_DIR}
-RUN chmod 766 /opt
+RUN chmod 777 /opt
 
 # Set up cron job
 # RUN echo '0 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
