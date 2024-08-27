@@ -10,14 +10,21 @@ USER root
 # Install git
 RUN apk update && apk add --no-cache git bash
 
-# clone repo TODO: uncomment once done testing
+# clone repo 
+# TODO: uncomment once done testing
 # RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR} ; \
 #     cd ${TARGET_DIR} ; \
 #     rm -rf .git
 
-# Copy your script into the container
+# Copy script into the container
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
-RUN chmod +x /usr/local/bin/update-and-import.sh
+
+# Set permissions to be read and executable by the owner and others
+RUN chmod 555 /usr/local/bin/update-and-import.sh
+
+# Set permissions to allow rwx for owner, and rw for group/others
+# TODO: change /opt to ${TARGET_DIR}
+RUN chmod 766 /opt
 
 # Set up cron job
 # RUN echo '0 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
