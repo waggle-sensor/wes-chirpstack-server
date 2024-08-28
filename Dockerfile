@@ -8,7 +8,7 @@ ENV TARGET_DIR=/opt/lorawan-devices
 USER root
 
 # Install git
-RUN apk update && apk add --no-cache git bash
+RUN apk update && apk add --no-cache git bash busybox-suid
 
 # clone repo 
 # TODO: uncomment once done testing
@@ -31,10 +31,7 @@ RUN echo 'root' > /etc/cron.allow && echo 'nobody' >> /etc/cron.allow
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
-RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2>> /proc/1/fd/2' > /etc/crontabs/nobody
-
-#give nobody user permission to exec crond
-RUN chmod 755 /usr/sbin/crond
+RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2 >> /proc/1/fd/2' > /etc/crontabs/nobody
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
