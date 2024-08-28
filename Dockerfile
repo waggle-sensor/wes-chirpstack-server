@@ -14,8 +14,8 @@ RUN apk update && apk add --no-cache git bash sudo
 RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
 
 # clone DEVICE_TEMPLATES_REPO 
-RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
-# RUN chown -R nobody:nogroup ${TARGET_DIR}
+RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR} ; \
+  chown -R nobody:nogroup ${TARGET_DIR}
 
 # Copy script into the container
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
@@ -24,8 +24,8 @@ COPY update-and-import.sh /usr/local/bin/update-and-import.sh
 RUN chmod 755 /usr/local/bin/update-and-import.sh
 
 # Set permissions to be rwx for owner and rx for group/others
-# TODO: change /opt to ${TARGET_DIR}, do I need this once /opt/lorawan-devices is created? first try removing this completelly 
-# RUN chmod 777 ${TARGET_DIR}${TARGET_DIR}
+# TODO: do I need this once /opt/lorawan-devices is created? first try removing this completelly 
+# RUN chmod 777 ${TARGET_DIR}
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
