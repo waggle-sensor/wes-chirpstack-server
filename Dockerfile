@@ -27,7 +27,7 @@ RUN chmod 555 /usr/local/bin/update-and-import.sh
 RUN chmod 777 /opt
 
 # Set cron permissions to root and nobody so that the cronjobs can run under these users
-RUN echo 'root' > /etc/cron.allow && echo 'nobody' >> /etc/cron.allow
+RUN echo 'root' > /etc/cron.allow && echo 'nobody' >> /etc/cron.d/cron.allow
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
