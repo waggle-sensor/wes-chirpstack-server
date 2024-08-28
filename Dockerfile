@@ -22,12 +22,12 @@ RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
 # Copy script into the container
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
 
-# Set permissions to be read and executable by the owner and others
-# RUN chmod 555 /usr/local/bin/update-and-import.sh
+# Set permissions to be rwx for owner and rx for group/others
+RUN chmod 755 /usr/local/bin/update-and-import.sh
 
-# Set permissions to allow rwx for owner/group/others
+# Set permissions to be rwx for owner and rx for group/others
 # TODO: change /opt to ${TARGET_DIR}
-# RUN chmod 777 /opt
+RUN chmod 755 /opt
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
