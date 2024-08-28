@@ -14,8 +14,8 @@ RUN apk update && apk add --no-cache git bash sudo
 RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
 
 # clone DEVICE_TEMPLATES_REPO 
-RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}; \
-  chown -R nobody:nogroup ${TARGET_DIR}
+RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
+# RUN chown -R nobody:nogroup ${TARGET_DIR}
 
 # Copy script into the container
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
