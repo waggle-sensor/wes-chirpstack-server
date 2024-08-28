@@ -7,8 +7,11 @@ ENV TARGET_DIR=/opt/lorawan-devices
 
 USER root
 
-# Install git
-RUN apk update && apk add --no-cache git bash busybox-suid
+# Install packages
+RUN apk update && apk add --no-cache git bash sudo
+
+# add crond to be used with sudo by nobody user
+RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
 
 # clone repo 
 # TODO: uncomment once done testing
@@ -20,18 +23,15 @@ RUN apk update && apk add --no-cache git bash busybox-suid
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
 
 # Set permissions to be read and executable by the owner and others
-RUN chmod 555 /usr/local/bin/update-and-import.sh
+# RUN chmod 555 /usr/local/bin/update-and-import.sh
 
 # Set permissions to allow rwx for owner/group/others
 # TODO: change /opt to ${TARGET_DIR}
-RUN chmod 777 /opt
-
-# # Set cron permissions to root and nobody so that the cronjobs can run under these users
-RUN echo 'root' > /etc/cron.allow && echo 'nobody' >> /etc/cron.allow
+# RUN chmod 777 /opt
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
-RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2 >> /proc/1/fd/2' > /etc/crontabs/nobody
+RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2 >> /proc/1/fd/2' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
