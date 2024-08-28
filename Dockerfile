@@ -26,10 +26,9 @@ RUN chmod 555 /usr/local/bin/update-and-import.sh
 # TODO: change /opt to ${TARGET_DIR}
 RUN chmod 777 /opt
 
+# restore the running as `nobody` as is defined by chirpstack docker image
+USER nobody:nogroup
+
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
 RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2>> /proc/1/fd/2' > /etc/crontabs/nobody
-
-
-# restore the running as `nobody` as is defined by chirpstack docker image
-USER nobody:nogroup
