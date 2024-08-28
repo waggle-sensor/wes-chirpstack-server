@@ -26,12 +26,13 @@ RUN chmod 555 /usr/local/bin/update-and-import.sh
 # TODO: change /opt to ${TARGET_DIR}
 RUN chmod 777 /opt
 
-# Set cron permissions to root and nobody so that the cronjobs can run under these users
-RUN echo 'root' > /etc/cron.allow && echo 'nobody' >> /etc/cron.d/cron.allow
+# # Set cron permissions to root and nobody so that the cronjobs can run under these users
+# RUN echo 'root' > /etc/cron.allow && echo 'nobody' >> /etc/cron.allow
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
-RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2>> /proc/1/fd/2' > /etc/crontabs/nobody
+RUN echo '*/1 * * * * nobody /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2>> /proc/1/fd/2' > /etc/crontabs/root
+RUN crond
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
