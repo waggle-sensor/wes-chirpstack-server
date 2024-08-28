@@ -26,8 +26,8 @@ COPY update-and-import.sh /usr/local/bin/update-and-import.sh
 RUN chmod 755 /usr/local/bin/update-and-import.sh
 
 # Set permissions to be rwx for owner and rx for group/others
-# TODO: change /opt to ${TARGET_DIR}
-RUN chmod 755 /opt
+# TODO: change /opt to ${TARGET_DIR}, do I need this once /opt/lorawan-devices is created? first try removing this completelly 
+RUN chmod 777 /opt
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
