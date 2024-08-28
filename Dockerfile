@@ -32,4 +32,4 @@ RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh >> /proc/1/fd/1 2>> /p
 
 
 # restore the running as `nobody` as is defined by chirpstack docker image
-USER nobody:nogroup
+# USER nobody:nogroup
