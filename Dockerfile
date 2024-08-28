@@ -15,8 +15,7 @@ RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
 
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR} ; \
-    cd ${TARGET_DIR} ; \
-    rm -rf .git
+    cd ${TARGET_DIR}
 
 # Copy script into the container
 COPY update-and-import.sh /usr/local/bin/update-and-import.sh
