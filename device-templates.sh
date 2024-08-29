@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load environment variables
-export $(cat /proc/1/environ | tr '\0' '\n' | grep -v '^$' | xargs -d '\n')
+export $(cat /proc/1/environ | tr '\0' '\n' | xargs -0)
 
 # Clone or update the repository
 if [ ! -d "$TARGET_DIR" ]; then
