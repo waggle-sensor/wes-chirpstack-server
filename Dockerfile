@@ -30,7 +30,7 @@ RUN chmod 755 /usr/local/bin/device-templates.sh
 
 # Set up cron job
 # RUN echo '*/30 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
-RUN echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
+RUN echo '*/1 * * * * BASH_ENV=/etc/profile /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
