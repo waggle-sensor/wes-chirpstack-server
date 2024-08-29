@@ -32,8 +32,5 @@ RUN chmod 755 /usr/local/bin/device-templates.sh
 # RUN echo '*/30 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 RUN echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 
-# cron does not read env, save it here so that cron has env vars
-RUN env > /root/env
-
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup

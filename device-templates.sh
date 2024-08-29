@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -l
 
 # Clone or update the repository
 if [ ! -d "$TARGET_DIR" ]; then
