@@ -10,32 +10,22 @@ USER root
 # Install packages
 RUN apk update && apk add --no-cache git bash sudo
 
-# add crond to be used with sudo by nobody user
-RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
-
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
 
 # Copy script into the container
 COPY device-templates.sh /usr/local/bin/device-templates.sh
 
-RUN chown -R nobody:nogroup ${TARGET_DIR}
-
-# Set permissions to be rwx for owner and rx for group/others
-RUN chmod 755 /usr/local/bin/device-templates.sh
-
-# Set permissions to be rwx for owner and rx for group/others
-# TODO: do I need this once /opt/lorawan-devices is created? first try removing this completelly 
-# RUN chmod 777 ${TARGET_DIR}
-
+# add crond to be used with sudo by nobody user & 
+# add global env vars to be used in cron & 
+# Set permissions &
 # Set up cron job
-# RUN echo '*/30 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
-RUN echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
-
-#add global env to be used in cron
-RUN printenv > /etc/environment
-
-RUN chown -R nobody:nogroup /etc/environment
+RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' && \
+    printenv > /etc/environment && \
+    chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
+    chmod 755 /usr/local/bin/device-templates.sh && \
+    echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
+    #'*/30 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
