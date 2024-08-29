@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 # Load environment variables
 . /usr/bin/env
