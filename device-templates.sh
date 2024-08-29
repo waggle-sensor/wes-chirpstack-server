@@ -1,4 +1,7 @@
-#!/bin/bash -l
+#!/bin/bash
+
+# Load environment variables
+source /root/.bash_profile
 
 # Clone or update the repository
 if [ ! -d "$TARGET_DIR" ]; then
