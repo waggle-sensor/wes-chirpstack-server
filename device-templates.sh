@@ -1,6 +1,4 @@
 #!/bin/sh
-DEVICE_TEMPLATES_REPO=https://github.com/waggle-sensor/wes-lorawan-device-templates
-TARGET_DIR=/opt/lorawan-devices
 
 # Clone or update the repository
 if [ ! -d "$TARGET_DIR" ]; then
