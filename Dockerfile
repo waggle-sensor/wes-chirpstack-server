@@ -35,5 +35,7 @@ RUN echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 #add global env to be used in cron
 RUN printenv > /etc/environment
 
+RUN chown -R nobody:nogroup /etc/environment
+
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
