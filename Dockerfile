@@ -17,20 +17,20 @@ RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
 
 # Copy script into the container
-COPY update-and-import.sh /usr/local/bin/update-and-import.sh
+COPY device-templates.sh /usr/local/bin/device-templates.sh
 
 RUN chown -R nobody:nogroup ${TARGET_DIR}
 
 # Set permissions to be rwx for owner and rx for group/others
-RUN chmod 755 /usr/local/bin/update-and-import.sh
+RUN chmod 755 /usr/local/bin/device-templates.sh
 
 # Set permissions to be rwx for owner and rx for group/others
 # TODO: do I need this once /opt/lorawan-devices is created? first try removing this completelly 
 # RUN chmod 777 ${TARGET_DIR}
 
 # Set up cron job
-# RUN echo '*/30 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
-RUN echo '*/1 * * * * /usr/local/bin/update-and-import.sh' > /etc/crontabs/root
+# RUN echo '*/30 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
+RUN echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
