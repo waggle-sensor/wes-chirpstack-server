@@ -1,8 +1,5 @@
 #!/bin/bash -l
 
-# Load environment variables
-. /usr/bin/env
-
 # Clone or update the repository
 if [ ! -d "$TARGET_DIR" ]; then
   echo "device-templates: Cloning repository $DEVICE_TEMPLATES_REPO to $TARGET_DIR"
