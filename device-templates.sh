@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load environment variables
-source /root/.bash_profile
+export $(cat /proc/1/environ | tr '\0' '\n' | grep -v '^$' | xargs -d '\n')
 
 # Clone or update the repository
 if [ ! -d "$TARGET_DIR" ]; then
