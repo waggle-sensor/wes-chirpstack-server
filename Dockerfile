@@ -20,7 +20,7 @@ COPY device-templates.sh /usr/local/bin/device-templates.sh
 # add global env vars to be used in cron & 
 # Set permissions &
 # Set up cron job
-RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' && \
+RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
     printenv > /etc/environment && \
     chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
     chmod 755 /usr/local/bin/device-templates.sh && \
