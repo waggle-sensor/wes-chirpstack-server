@@ -1,16 +1,30 @@
+# If you migrate to chirpstack=>4.7v, a migration needs to be done
+#check this: https://www.chirpstack.io/docs/chirpstack/changelog.html#v470
 FROM chirpstack/chirpstack:4.6
 
-ENV TTN_REPO=https://github.com/TheThingsNetwork/lorawan-devices
-ENV TTN_VERSION=277e69a79347ceba2593e1da08117d0e3329ecda
+ENV DEVICE_TEMPLATES_REPO=https://github.com/waggle-sensor/wes-lorawan-device-templates
+ENV TARGET_DIR=/opt/lorawan-devices
 
 USER root
 
-RUN apk update && apk add --no-cache git
+# Install packages
+RUN apk update && apk add --no-cache git bash sudo
 
-RUN git clone ${TTN_REPO} -b master --single-branch /opt/lorawan-devices ; \
-    cd /opt/lorawan-devices ; \
-    git checkout ${TTN_VERSION} ; \
-    rm -rf .git
+# clone DEVICE_TEMPLATES_REPO 
+RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
+
+# Copy script into the container
+COPY device-templates.sh /usr/local/bin/device-templates.sh
+
+# add crond to be used with sudo by nobody user & 
+# add global env vars to be used in cron & 
+# Set permissions &
+# Set up cron job
+RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
+    printenv > /etc/environment && \
+    chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
+    chmod 755 /usr/local/bin/device-templates.sh && \
+    echo '0 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
