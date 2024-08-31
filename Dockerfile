@@ -24,8 +24,7 @@ RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
     printenv > /etc/environment && \
     chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
     chmod 755 /usr/local/bin/device-templates.sh && \
-    echo '*/1 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
-    #'*/30 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
+    echo '0 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
