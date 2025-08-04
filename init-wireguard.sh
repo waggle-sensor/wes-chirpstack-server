@@ -1,5 +1,10 @@
 #!/bin/sh
-ENDPOINT=http://localhost:8005/node-auth/wireguard/
+
+# Check if WG_GET_CONFIG_ENDPOINT is set
+if [ -z "$WG_GET_CONFIG_ENDPOINT" ]; then
+    echo "[WIREGUARD] WG_GET_CONFIG_ENDPOINT not set, exiting. Please set this environment variable to the endpoint to get the WireGuard config."
+    exit 0
+fi
 
 # Check if wg0 is up
 if /usr/local/bin/check-wg0.sh; then
