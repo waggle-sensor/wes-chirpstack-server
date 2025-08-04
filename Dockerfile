@@ -8,13 +8,15 @@ ENV TARGET_DIR=/opt/lorawan-devices
 USER root
 
 # Install packages
-RUN apk update && apk add --no-cache git bash sudo
+RUN apk update && apk add --no-cache git bash sudo wireguard-tools curl jq
 
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
 
-# Copy script into the container
+# Copy scripts into the container
 COPY device-templates.sh /usr/local/bin/device-templates.sh
+COPY init-wireguard.sh /usr/local/bin/init-wireguard.sh
+COPY check-wg0.sh /usr/local/bin/check-wg0.sh
 
 # add crond to be used with sudo by nobody user & 
 # add global env vars to be used in cron & 
@@ -24,7 +26,8 @@ RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
     printenv > /etc/environment && \
     chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
     chmod 755 /usr/local/bin/device-templates.sh && \
-    echo '0 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root
+    echo '0 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root && \
+    echo '*/5 * * * * /usr/local/bin/init-wireguard.sh' >> /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
 USER nobody:nogroup
