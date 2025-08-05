@@ -2,7 +2,13 @@
 
 # Check if WG_GET_CONFIG_ENDPOINT is set
 if [ -z "$WG_GET_CONFIG_ENDPOINT" ]; then
-    echo "[WIREGUARD] WG_GET_CONFIG_ENDPOINT not set, exiting. Please set this environment variable to the endpoint to get the WireGuard config."
+    echo "[WIREGUARD] WG_GET_CONFIG_ENDPOINT not set, exiting. Please set this environment variable to the GET WireGuard config endpoint."
+    exit 0
+fi
+
+# check if AUTH_NODE_KEYWORD is set
+if [ -z "$AUTH_NODE_KEYWORD" ]; then
+    echo "[WIREGUARD] AUTH_NODE_KEYWORD not set, exiting. Please set this environment variable to the authorization keyword for the GET WireGuard config endpoint."
     exit 0
 fi
 
@@ -22,20 +28,34 @@ else
 fi
 
 # Fetch WireGuard config
-echo "[WIREGUARD] Fetching WireGuard config..."
-JSON=$(curl -s -H "Authorization: node_auth $NODE_TOKEN" $ENDPOINT)
-echo "[WIREGUARD] Parsing config and writing wg0.conf..."
-mkdir -p /wireguard/config
-NODE_PUB_KEY=$(echo $JSON | jq -r '.[0].node_wg_pub_key')
-NODE_PRIV_KEY=$(echo $JSON | jq -r '.[0].node_wg_priv_key')
-NODE_WG_IP=$(echo $JSON | jq -r '.[0].node_wg_ip')
-SERVER_PUB_KEY=$(echo $JSON | jq -r '.[0].server_pub_key')
-SERVER_PUB_IP=$(echo $JSON | jq -r '.[0].server_pub_ip')
-SERVER_PORT=$(echo $JSON | jq -r '.[0].server_wg_port')
-SERVER_WG_IP=$(echo $JSON | jq -r '.[0].server_wg_ip')
+echo "[WIREGUARD] Fetching WireGuard config from $WG_GET_CONFIG_ENDPOINT ..."
+JSON=$(curl -s -f -H "Authorization: $AUTH_NODE_KEYWORD $NODE_TOKEN" "$WG_GET_CONFIG_ENDPOINT")
+if [ $? -ne 0 ] || [ -z "$JSON" ]; then
+    echo "[WIREGUARD] Failed to fetch WireGuard config or empty response. Exiting."
+    exit 1
+fi
+
+# Parse and validate config fields
+echo "[WIREGUARD] Parsing config..."
+NODE_PUB_KEY=$(echo "$JSON" | jq -r '.[0].node_wg_pub_key')
+NODE_PRIV_KEY=$(echo "$JSON" | jq -r '.[0].node_wg_priv_key')
+NODE_WG_IP=$(echo "$JSON" | jq -r '.[0].node_wg_ip')
+SERVER_PUB_KEY=$(echo "$JSON" | jq -r '.[0].server_pub_key')
+SERVER_PUB_IP=$(echo "$JSON" | jq -r '.[0].server_pub_ip')
+SERVER_PORT=$(echo "$JSON" | jq -r '.[0].server_wg_port')
+SERVER_WG_IP=$(echo "$JSON" | jq -r '.[0].server_wg_ip')
+
+# Validate required values
+if [ -z "$NODE_PRIV_KEY" ] || [ -z "$NODE_WG_IP" ] || [ -z "$SERVER_PUB_KEY" ] || [ -z "$SERVER_PUB_IP" ] || [ -z "$SERVER_PORT" ] || [ -z "$SERVER_WG_IP" ]; then
+    echo "[WIREGUARD] One or more required fields are missing in the config. Exiting."
+    exit 1
+fi
 
 # Write wg0.conf
-cat <<EOF > /wireguard/config/wg0.conf
+mkdir -p /wireguard/config
+WG_CONFIG="/wireguard/config/wg0.conf"
+echo "[WIREGUARD] Writing WireGuard config to $WG_CONFIG ..."
+cat <<EOF > $WG_CONFIG
 [Interface]
 PrivateKey = $NODE_PRIV_KEY
 Address = $NODE_WG_IP
@@ -48,7 +68,10 @@ PersistentKeepalive = 25
 EOF
 
 # Start WireGuard
-echo "[WIREGUARD] WireGuard config written to /wireguard/config/wg0.conf"
-echo "[WIREGUARD] Starting WireGuard..."
-wg-quick up /wireguard/config/wg0.conf
-echo "[WIREGUARD] WireGuard started!"
+echo "[WIREGUARD] Starting WireGuard with $WG_CONFIG ..."
+wg-quick up $WG_CONFIG
+if [ $? -ne 0 ]; then
+    echo "[WIREGUARD] Failed to bring up WireGuard interface wg0. Exiting."
+    exit 1
+fi
+echo "[WIREGUARD] WireGuard started successfully!"
