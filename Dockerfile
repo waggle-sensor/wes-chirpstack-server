@@ -25,7 +25,7 @@ COPY check-wg0.sh /usr/local/bin/check-wg0.sh
 RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
     printenv > /etc/environment && \
     chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
-    chmod 755 /usr/local/bin/device-templates.sh && \
+    chmod 755 /usr/local/bin/device-templates.sh /usr/local/bin/init-wireguard.sh /usr/local/bin/check-wg0.sh && \
     echo '0 * * * * /usr/local/bin/device-templates.sh' > /etc/crontabs/root && \
     echo '*/5 * * * * /usr/local/bin/init-wireguard.sh' >> /etc/crontabs/root
 
