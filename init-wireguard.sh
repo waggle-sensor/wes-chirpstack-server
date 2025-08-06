@@ -29,8 +29,10 @@ fi
 
 # Fetch WireGuard config
 echo "[WIREGUARD] Fetching WireGuard config from $WG_GET_CONFIG_ENDPOINT ..."
-JSON=$(curl -s -f -H "Authorization: $AUTH_NODE_KEYWORD $NODE_TOKEN" "$WG_GET_CONFIG_ENDPOINT")
-if [ $? -ne 0 ] || [ -z "$JSON" ]; then
+JSON=$(wget --quiet --header="Authorization: $AUTH_NODE_KEYWORD $NODE_TOKEN" \
+             "$WG_GET_CONFIG_ENDPOINT" -O -)
+
+if [ -z "$JSON" ]; then
     echo "[WIREGUARD] Failed to fetch WireGuard config or empty response. Exiting."
     exit 1
 fi

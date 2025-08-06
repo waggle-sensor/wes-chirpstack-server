@@ -8,7 +8,7 @@ ENV TARGET_DIR=/opt/lorawan-devices
 USER root
 
 # Install packages
-RUN apk update && apk add --no-cache git bash sudo wireguard-tools curl jq
+RUN apk update && apk add --no-cache git bash sudo wireguard-tools jq
 
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
