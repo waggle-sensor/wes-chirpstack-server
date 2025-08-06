@@ -18,10 +18,6 @@ COPY device-templates.sh /usr/local/bin/device-templates.sh
 COPY init-wireguard.sh /usr/local/bin/init-wireguard.sh
 COPY check-wg0.sh /usr/local/bin/check-wg0.sh
 
-# Install ca-certificates and set timezone to UTC for wget to work properly
-#TODO: do I need this?
-RUN apk add --no-cache ca-certificates tzdata
-
 # add crond to be used with sudo by nobody user & 
 # add global env vars to be used in cron & 
 # Set permissions &
