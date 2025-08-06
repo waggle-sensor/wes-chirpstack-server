@@ -8,7 +8,7 @@ ENV TARGET_DIR=/opt/lorawan-devices
 USER root
 
 # Install packages
-RUN apk update && apk add --no-cache git bash sudo wireguard-tools curl jq
+RUN apk update && apk add --no-cache git bash sudo wireguard-tools jq
 
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
@@ -17,6 +17,11 @@ RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
 COPY device-templates.sh /usr/local/bin/device-templates.sh
 COPY init-wireguard.sh /usr/local/bin/init-wireguard.sh
 COPY check-wg0.sh /usr/local/bin/check-wg0.sh
+
+# Install ca-certificates and set timezone to UTC for wget to work properly
+RUN apk add --no-cache ca-certificates tzdata && \
+    cp /usr/share/zoneinfo/UTC /etc/localtime && \
+    echo "UTC" > /etc/timezone
 
 # add crond to be used with sudo by nobody user & 
 # add global env vars to be used in cron & 
