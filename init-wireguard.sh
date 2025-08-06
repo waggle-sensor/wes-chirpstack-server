@@ -68,6 +68,7 @@ Endpoint = $SERVER_PUB_IP:$SERVER_PORT
 AllowedIPs = $SERVER_WG_IP/32
 PersistentKeepalive = 25
 EOF
+chmod 600 $WG_CONFIG
 
 # Start WireGuard
 echo "[WIREGUARD] Starting WireGuard with $WG_CONFIG ..."
