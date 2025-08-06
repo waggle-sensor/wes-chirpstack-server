@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -l
 
 # Check if wg0 interface exists and is up
 if ip link show wg0 > /dev/null 2>&1; then

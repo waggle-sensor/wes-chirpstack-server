@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -l
 
 # Check if WG_GET_CONFIG_ENDPOINT is set
 if [ -z "$WG_GET_CONFIG_ENDPOINT" ]; then
