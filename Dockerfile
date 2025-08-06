@@ -8,7 +8,9 @@ ENV TARGET_DIR=/opt/lorawan-devices
 USER root
 
 # Install packages
-RUN apk update && apk add --no-cache git bash sudo wireguard-tools jq
+RUN apk update && apk add --no-cache go git bash sudo wireguard-tools jq \
+ && go install golang.zx2c4.com/wireguard-go@latest \
+ && mv /root/go/bin/wireguard-go /usr/local/bin/wireguard-go
 
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}

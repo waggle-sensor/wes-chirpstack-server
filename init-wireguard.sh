@@ -69,12 +69,26 @@ Endpoint = $SERVER_PUB_IP:$SERVER_PORT
 AllowedIPs = $SERVER_WG_IP/32
 PersistentKeepalive = 25
 EOF
+chmod 600 $WG_CONFIG
 
-# Start WireGuard
-echo "[WIREGUARD] Starting WireGuard with $WG_CONFIG ..."
-wg-quick up $WG_CONFIG
-if [ $? -ne 0 ]; then
-    echo "[WIREGUARD] Failed to bring up WireGuard interface $IFACE. Exiting."
+# Start WireGuard in user space
+echo "[WIREGUARD] Starting WireGuard-go with $WG_CONFIG ..."
+wireguard-go $IFACE &
+WG_PID=$!
+sleep 10
+
+# Check wg0 interface created
+if ! ip link show wg0 > /dev/null 2>&1; then
+    echo "[WIREGUARD] Interface wg0 not found. Killing wireguard-go. Exiting."
+    kill $WG_PID
     exit 1
 fi
-echo "[WIREGUARD] WireGuard started successfully!"
+
+# Apply the config
+wg setconf $IFACE $WG_CONFIG
+
+# Set up routing (container-only). TODO: Check if wg0 shows up outside the container
+# ip route del default
+# ip route add default dev $IFACE
+
+echo "[WIREGUARD] WireGuard-go started successfully!"

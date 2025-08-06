@@ -1,4 +1,5 @@
 #!/bin/bash -l
+set -euo pipefail
 
 # Check if wg0 interface exists and is up
 if ip link show wg0 > /dev/null 2>&1; then
@@ -8,10 +9,16 @@ else
     exit 1
 fi
 
-# Check for peers with recent handshake (within last 5 minutes = 300 seconds)
+# Get current time
 CURRENT_TIME=$(date +%s)
-HANDSHAKES=$(wg show wg0 latest-handshakes | awk '{print $2}')
 
+# Get latest handshakes
+if ! HANDSHAKES_RAW=$(wg show wg0 latest-handshakes 2>/dev/null); then
+    echo "[WIREGUARD] Failed to get latest-handshakes from wg0"
+    exit 1
+fi
+
+HANDSHAKES=$(echo "$HANDSHAKES_RAW" | awk '{print $2}')
 HANDSHAKE_FOUND=0
 
 for hs in $HANDSHAKES; do
