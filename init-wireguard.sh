@@ -73,13 +73,7 @@ chmod 600 $WG_CONFIG
 
 # Start WireGuard
 echo "[WIREGUARD] Starting WireGuard with $WG_CONFIG ..."
-# wg-quick up $WG_CONFIG
-ip link add dev $IFACE type wireguard
-ip address add dev $IFACE $NODE_WG_IP/30
-wg set $IFACE private-key $NODE_PRIV_KEY
-wg set $IFACE listen-port $SERVER_PORT
-ip link set up dev $IFACE
-wg set $IFACE peer $SERVER_PUB_KEY endpoint $SERVER_PUB_IP:$SERVER_PORT allowed-ips $SERVER_WG_IP/32 persistent-keepalive 25
+wg-quick up $WG_CONFIG
 if [ $? -ne 0 ]; then
     echo "[WIREGUARD] Failed to bring up WireGuard interface $IFACE. Exiting."
     exit 1
