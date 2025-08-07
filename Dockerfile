@@ -1,3 +1,22 @@
+# --------------------------------------
+# Stage 1: Build wireguard-go binary
+# --------------------------------------
+FROM golang:1.23-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git make
+
+# Clone and checkout specific wireguard-go tag
+ENV WIREGUARD_GO_VERSION=0.0.20250522
+RUN git clone https://git.zx2c4.com/wireguard-go \
+ && cd wireguard-go \
+ && git checkout ${WIREGUARD_GO_VERSION} \
+ && make \
+ && cp wireguard-go /wireguard-go
+
+# --------------------------------------
+# Stage 2: Final image with ChirpStack
+# --------------------------------------
 # If you migrate to chirpstack=>4.7v, a migration needs to be done
 #check this: https://www.chirpstack.io/docs/chirpstack/changelog.html#v470
 FROM chirpstack/chirpstack:4.6
@@ -7,13 +26,11 @@ ENV TARGET_DIR=/opt/lorawan-devices
 
 USER root
 
-# Install packages
-RUN apk update && apk add --no-cache go git bash sudo wireguard-tools jq make \
- && git clone https://git.zx2c4.com/wireguard-go \
- && cd wireguard-go \
- && make \
- && cp wireguard-go /usr/local/bin/wireguard-go \
- && cd .. && rm -rf wireguard-go
+# Install runtime dependencies
+RUN apk update && apk add --no-cache bash sudo wireguard-tools jq
+
+# Copy built wireguard-go from builder
+COPY --from=builder /wireguard-go /usr/local/bin/wireguard-go
 
 # clone DEVICE_TEMPLATES_REPO 
 RUN git clone ${DEVICE_TEMPLATES_REPO} -b master --single-branch ${TARGET_DIR}
