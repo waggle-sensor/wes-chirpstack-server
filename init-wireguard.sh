@@ -12,9 +12,12 @@ if [ -z "$AUTH_NODE_KEYWORD" ]; then
     exit 0
 fi
 
-# Check if wg0 is up
+# Check if wg0 is up and healthy
 if /usr/local/bin/check-wg0.sh; then
     exit 0
+else
+    echo "[WIREGUARD] wg0 not up or stale handshake."
+    ip link del wg0 2>/dev/null || true
 fi
 
 # Check for token
@@ -61,7 +64,6 @@ echo "[WIREGUARD] Writing WireGuard config to $WG_CONFIG ..."
 cat <<EOF > $WG_CONFIG
 [Interface]
 PrivateKey = $NODE_PRIV_KEY
-Address = $NODE_WG_IP
 
 [Peer]
 PublicKey = $SERVER_PUB_KEY
@@ -72,17 +74,22 @@ EOF
 chmod 600 $WG_CONFIG
 
 # Start WireGuard in user space
-echo "[WIREGUARD] Starting WireGuard-go with $WG_CONFIG ..."
+echo "[WIREGUARD] Starting wireguard-go on interface $IFACE ..."
 wireguard-go $IFACE &
 WG_PID=$!
 sleep 10
 
-# Check wg0 interface created
-if ! ip link show wg0 > /dev/null 2>&1; then
-    echo "[WIREGUARD] Interface wg0 not found. Killing wireguard-go. Exiting."
+# Check if interface created
+if ! ip link show $IFACE > /dev/null 2>&1; then
+    echo "[WIREGUARD] Interface $IFACE not found. Killing wireguard-go. Exiting."
     kill $WG_PID
     exit 1
 fi
+
+# Assign IP
+echo "[WIREGUARD] Assigning IP $NODE_WG_IP to $IFACE ..."
+ip address add $NODE_WG_IP dev $IFACE
+ip link set up dev $IFACE
 
 # Apply the config
 wg setconf $IFACE $WG_CONFIG
