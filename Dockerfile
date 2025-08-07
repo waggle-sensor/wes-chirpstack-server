@@ -27,7 +27,7 @@ ENV TARGET_DIR=/opt/lorawan-devices
 USER root
 
 # Install runtime dependencies
-RUN apk update && apk add --no-cache bash sudo wireguard-tools jq
+RUN apk update && apk add --no-cache git bash sudo wireguard-tools jq
 
 # Copy built wireguard-go from builder
 COPY --from=builder /wireguard-go /usr/local/bin/wireguard-go
