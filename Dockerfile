@@ -44,7 +44,8 @@ COPY check-wg0.sh /usr/local/bin/check-wg0.sh
 # add global env vars to be used in cron & 
 # Set permissions &
 # Set up cron job
-RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
+# TODO: change back to nobody once tested
+RUN echo 'root ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
     printenv > /etc/environment && \
     chown -R nobody:nogroup ${TARGET_DIR} /etc/environment && \
     chmod 755 /usr/local/bin/device-templates.sh /usr/local/bin/init-wireguard.sh /usr/local/bin/check-wg0.sh && \
