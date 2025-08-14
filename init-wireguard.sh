@@ -93,6 +93,7 @@ ip link set up dev $IFACE
 
 # Apply the config
 wg setconf $IFACE $WG_CONFIG
+ip route add $SERVER_WG_IP/32 dev $IFACE
 
 # Set up routing (container-only). TODO: Check if wg0 shows up outside the container
 # ip route del default
