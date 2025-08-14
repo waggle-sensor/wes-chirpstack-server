@@ -52,4 +52,4 @@ RUN echo 'nobody ALL=(ALL) NOPASSWD: /usr/sbin/crond' > /etc/sudoers && \
     echo '*/5 * * * * /usr/local/bin/init-wireguard.sh' >> /etc/crontabs/root
 
 # restore the running as `nobody` as is defined by chirpstack docker image
-USER nobody:nogroup
+# USER nobody:nogroup TODO: comment out once done testing
