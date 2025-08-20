@@ -15,6 +15,11 @@ Our project also includes a WireGuard VPN connection to [waggle-auth-app](https:
 - The `check-wg0.sh` script checks if the WireGuard interface is up and has recent handshakes, ensuring a stable VPN connection.
 - The cron job is scheduled to run every 5 minutes to ensure the WireGuard connection is active.
 
+## Versioning
+The version of the `wes-chirpstack-server` is aligned with the version of the `chirpstack/chirpstack` image, but the patch version can differ.
+
+For example, if the `chirpstack/chirpstack` image is at version 4.14, the `wes-chirpstack-server` is at version 4.14. But if a patch version is needed, the `wes-chirpstack-server` can be at version 4.14.1 even if the `chirpstack/chirpstack` image is at version 4.14.0.
+
 References:
 - https://www.chirpstack.io/docs/chirpstack/use/device-profile-templates.html
 - https://www.wireguard.com
