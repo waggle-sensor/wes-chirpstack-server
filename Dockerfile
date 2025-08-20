@@ -19,7 +19,7 @@ RUN git clone https://git.zx2c4.com/wireguard-go \
 # --------------------------------------
 # If you migrate to chirpstack=>4.7v, a migration needs to be done
 #check this: https://www.chirpstack.io/docs/chirpstack/changelog.html#v470
-FROM chirpstack/chirpstack:4.6
+FROM chirpstack/chirpstack:4.14
 
 ENV DEVICE_TEMPLATES_REPO=https://github.com/waggle-sensor/wes-lorawan-device-templates
 ENV TARGET_DIR=/opt/lorawan-devices
